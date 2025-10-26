@@ -1,0 +1,16 @@
+
+http://localhost:5000/api/issues
+
+{
+  "title": "Broken Water Heater",
+  "description": "Water heater in unit 204 not working",
+  "status": "unresolved",
+  "priority": "high"
+}
+
+{
+  "title": "Leaky Faucet",
+  "description": "Bathroom sink is dripping constantly",
+  "status": "ongoing",
+  "priority": "medium"
+}
