@@ -304,3 +304,117 @@ body {
         padding: 1rem;
     }
 }
+
+/* About Section */
+.about-section {
+    background-color: #fff;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    padding: 2rem;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.about-section h2 {
+    color: #FF6B47;
+    margin-bottom: 1rem;
+}
+
+/* Sign In Styles */
+.signin-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 60vh;
+}
+
+.signin-box {
+    background-color: #fff;
+    border: 3px solid #5DADE2;
+    border-radius: 8px;
+    padding: 2rem;
+    width: 100%;
+    max-width: 400px;
+}
+
+.signin-title {
+    text-align: center;
+    margin-bottom: 1.5rem;
+    font-size: 1.5rem;
+    font-weight: 600;
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 1rem;
+}
+
+.form-group input::placeholder {
+    color: #999;
+}
+
+.signin-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-top: 2rem;
+}
+
+.cancel-btn,
+.signin-btn {
+    padding: 0.75rem 2rem;
+    border: 2px solid #333;
+    border-radius: 6px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.cancel-btn {
+    background-color: #fff;
+    color: #333;
+}
+
+.signin-btn {
+    background-color: #FF8C42;
+    color: #fff;
+    border-color: #FF8C42;
+}
+
+.cancel-btn:hover,
+.signin-btn:hover {
+    transform: scale(1.05);
+}
+
+.loading,
+.error,
+.no-reports {
+    text-align: center;
+    padding: 2rem;
+    font-size: 1.2rem;
+}
+
+.loading {
+    color: #666;
+}
+
+.error {
+    color: #FF6B47;
+    background-color: #ffe5e5;
+    border-radius: 8px;
+    border: 2px solid #FF6B47;
+}

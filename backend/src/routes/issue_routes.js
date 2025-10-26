@@ -3,51 +3,52 @@ import * as db from '../services/database.js'
 
 const router = express.Router()
 
-// Get all users
+// Get all issues
 router.get('/', async (req, res) => {
   try {
-    const users = await db.getAllUsers()
-    res.json(users)
+    const issues = await db.getAllIssues()
+    res.json(issues)
   } catch (error) {
     res.status(500).json({ error: error.message })
   }
 })
 
-// Get user by ID
+// Get issue by ID
 router.get('/:id', async (req, res) => {
   try {
-    const user = await db.getUserById(req.params.id)
-    res.json(user)
+    const issue = await db.getIssueById(req.params.id)
+    res.json(issue)
   } catch (error) {
     res.status(500).json({ error: error.message })
   }
 })
 
-// Create user
+// Create issue
 router.post('/', async (req, res) => {
   try {
-    const newUser = await db.createUser(req.body)
-    res.status(201).json(newUser)
+    const newIssue = await db.createIssue(req.body)
+    res.status(201).json(newIssue)
   } catch (error) {
     res.status(500).json({ error: error.message })
   }
 })
 
-// Update user
+// Update issue
 router.put('/:id', async (req, res) => {
   try {
-    const updatedUser = await db.updateUser(req.params.id, req.body)
-    res.json(updatedUser)
+    const updatedIssue = await db.updateIssue(req.params.id, req.body)
+    res.json(updatedIssue)
   } catch (error) {
     res.status(500).json({ error: error.message })
   }
 })
 
-// Delete user
-router.delete('/:id', async (req, res) => {
+// Update issue status
+router.patch('/:id/status', async (req, res) => {
   try {
-    await db.deleteUser(req.params.id)
-    res.status(204).send()
+    const { status } = req.body
+    const updatedIssue = await db.updateIssueStatus(req.params.id, status)
+    res.json(updatedIssue)
   } catch (error) {
     res.status(500).json({ error: error.message })
   }

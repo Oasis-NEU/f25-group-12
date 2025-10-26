@@ -87,10 +87,7 @@ export const createProperty = async (propertyData) => {
 export const getAllIssues = async () => {
   const { data, error } = await supabase
     .from('Issues')
-    .select(`
-      *,
-      IssuePhotos (*)
-    `)
+    .select('*')
     .order('date_reported', { ascending: false })
   
   if (error) throw error
@@ -100,10 +97,7 @@ export const getAllIssues = async () => {
 export const getIssueById = async (issueId) => {
   const { data, error } = await supabase
     .from('Issues')
-    .select(`
-      *,
-      IssuePhotos (*)
-    `)
+    .select('*')
     .eq('issues_id', issueId)
     .single()
   
