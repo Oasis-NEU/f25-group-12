@@ -40,8 +40,8 @@ body {
 
 /* Header */
 .header {
-    background: linear-gradient(90deg, #FF8C42 0%, #FF6B9D 50%, #C06BFF 100%);
-    border-bottom: 3px solid #333;
+    background: linear-gradient(30deg, #FFF4EB 30%, #F88F32 90%);
+    border-bottom: 25px solid #FFF4EB; /* gotta figure out how to make this work */
     padding: 1rem 2rem;
     width: 100%;
     box-sizing: border-box;
@@ -97,7 +97,7 @@ body {
 .title {
     font-size: 1.8rem;
     font-weight: 500;
-    color: #fff;
+    color: #000;
     white-space: nowrap;
 }
 
@@ -108,7 +108,7 @@ body {
 }
 
 .nav-link {
-    color: #fff;
+    color: #000;
     text-decoration: none;
     font-size: 1.1rem;
     font-weight: 500;

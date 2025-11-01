@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { Link } from "react-router-dom";
 
 function SignIn() {
   const [email, setEmail] = useState('')
@@ -46,6 +47,12 @@ function SignIn() {
                 onChange={(e) => setPassword(e.target.value)}
                 required
               />
+            </div>
+
+            <div className="signup-button">
+              <nav className="nav">
+                <Link to="/signup" className="nav-link" class="text-blue">Sign Up</Link>
+              </nav>
             </div>
 
             <div className="signin-buttons">
