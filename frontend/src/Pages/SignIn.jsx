@@ -1,16 +1,30 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { UserAuth } from '../context/AuthContext'
 
 function SignIn() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [error, setError] = useState('')
+  const [loading, setLoading] = useState(false)
+  
   const navigate = useNavigate()
+  const { signInUser } = UserAuth()
 
-  const handleSignIn = (e) => {
+  const handleSignIn = async (e) => {
     e.preventDefault()
-    // Add authentication logic here
-    console.log('Sign in:', email, password)
-    navigate('/')
+    setError('')
+    setLoading(true)
+
+    const result = await signInUser(email, password)
+    
+    setLoading(false)
+
+    if (result.success) {
+      navigate('/')
+    } else {
+      setError(result.error)
+    }
   }
 
   const handleCancel = () => {
@@ -22,6 +36,8 @@ function SignIn() {
       <div className="signin-container">
         <div className="signin-box">
           <h2 className="signin-title">User Sign In</h2>
+          
+          {error && <div className="error-message">{error}</div>}
           
           <form onSubmit={handleSignIn}>
             <div className="form-group">
@@ -49,13 +65,26 @@ function SignIn() {
             </div>
 
             <div className="signin-buttons">
-              <button type="button" onClick={handleCancel} className="cancel-btn">
+              <button 
+                type="button" 
+                onClick={handleCancel} 
+                className="cancel-btn"
+                disabled={loading}
+              >
                 Cancel
               </button>
-              <button type="submit" className="signin-btn">
-                Sign In
+              <button 
+                type="submit" 
+                className="signin-btn"
+                disabled={loading}
+              >
+                {loading ? 'Signing In...' : 'Sign In'}
               </button>
             </div>
+            
+            <p className="signin-link">
+              Don't have an account? <a href="/signup">Sign Up</a>
+            </p>
           </form>
         </div>
       </div>

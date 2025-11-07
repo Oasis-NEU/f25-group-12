@@ -40,7 +40,7 @@ body {
 
 /* Header */
 .header {
-    background: linear-gradient(90deg, #FF8C42 0%, #FF6B9D 50%, #C06BFF 100%);
+    background: linear-gradient(90deg, #FF8C42 0%, #f6f4c9 100%, #fdfdfd 50%);
     border-bottom: 3px solid #333;
     padding: 1rem 2rem;
     width: 100%;
@@ -395,9 +395,147 @@ body {
     border-color: #FF8C42;
 }
 
+.signin-link {
+  text-align: center;
+  margin-top: 15px;
+  color: #666;
+}
+
+.signin-link a {
+  color: #FF8C42; /* or your theme color */
+  text-decoration: none;
+}
+
+.signin-link a:hover {
+  text-decoration: underline;
+  color: #5DADE2;
+}
+
 .cancel-btn:hover,
 .signin-btn:hover {
     transform: scale(1.05);
+}
+
+.profile-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 80vh;
+  padding: 20px;
+}
+
+.profile-box {
+  background: rgba(0, 0, 0, 0.8);
+  border: 2px solid #FF8C42;
+  border-radius: 8px;
+  padding: 40px;
+  max-width: 600px;
+  width: 100%;
+}
+
+.profile-title {
+  color: #FF8C42;
+  text-align: center;
+  margin-bottom: 30px;
+  font-size: 24px;
+}
+
+.profile-info {
+  margin-bottom: 30px;
+}
+
+.profile-field {
+  margin-bottom: 20px;
+  border-bottom: 1px solid #333;
+  padding-bottom: 10px;
+}
+
+.profile-field label {
+  color: #FF8C42;
+  font-weight: bold;
+  display: block;
+  margin-bottom: 5px;
+  font-size: 14px;
+}
+
+.profile-field p {
+  color: #fff;
+  margin: 0;
+  font-size: 16px;
+}
+
+.role-badge {
+  display: inline-block;
+  background: #FF8C42;
+  color: #000;
+  padding: 4px 12px;
+  border-radius: 4px;
+  font-weight: bold;
+  font-size: 14px !important;
+}
+
+.profile-buttons {
+  display: flex;
+  gap: 15px;
+  justify-content: center;
+}
+
+.signout-btn {
+  background-color: #FF8C42;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.signout-btn:hover {
+  background-color: #FF8C42;
+}
+
+.auth-buttons {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.signin-btn-header,
+.signup-btn-header,
+.signout-btn-header {
+  padding: 8px 16px;
+  border: 2px solid #FF8C42;
+  background: transparent;
+  color: #FF8C42;
+  cursor: pointer;
+  border-radius: 4px;
+  font-size: 14px;
+  transition: all 0.3s;
+}
+
+.signin-btn-header:hover,
+.signup-btn-header:hover {
+  background: #FF8C42;
+  color: #000;
+}
+
+.signout-btn-header {
+  border-color: #FF8C42;
+  color: #FF8C42;
+}
+
+.signout-btn-header:hover {
+  background: #FF8C42;
+  color: #fff;
+}
+
+.error-message {
+  background-color: #fee;
+  color: #c33;
+  padding: 10px;
+  border-radius: 4px;
+  margin-bottom: 15px;
+  border: 1px solid #fcc;
 }
 
 .loading,
