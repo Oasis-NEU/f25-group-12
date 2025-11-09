@@ -27,6 +27,7 @@ function Header() {
           <nav className="nav">
             <Link to="/" className="nav-link">Home</Link>
             <Link to="/about" className="nav-link">About</Link>
+            <Link to="/create-issue" className="nav-link">Report Issue</Link>
             {session && (
               <Link to="/profile" className="nav-link">Profile</Link>
             )}

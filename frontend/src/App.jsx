@@ -7,6 +7,7 @@ import SignIn from './Pages/SignIn'
 import SignUp from './Pages/SignUp'
 import Profile from './Pages/Profile'
 import ProtectedRoute from './Components/ProtectedRoute'
+import CreateIssue from './Pages/CreateIssue'
 import './App.css'
 
 function App() {
@@ -28,6 +29,14 @@ function App() {
               element={
                 <ProtectedRoute>
                   <Profile />
+                </ProtectedRoute>
+              } 
+            />
+            <Route 
+              path="/create-issue" 
+              element={
+                <ProtectedRoute>
+                  <CreateIssue />
                 </ProtectedRoute>
               } 
             />

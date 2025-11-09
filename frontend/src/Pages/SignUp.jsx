@@ -31,7 +31,7 @@ function SignUp() {
 
     setLoading(true)
 
-    // THIS IS THE IMPORTANT PART - Actually call Supabase
+    // THIS IS THE IMPORTANT PART, Call Supabase
     const result = await signUpNewUser(email, password, { 
       full_name: fullName 
     })
