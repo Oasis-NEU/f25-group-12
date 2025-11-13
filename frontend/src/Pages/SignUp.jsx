@@ -2,28 +2,47 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { UserAuth } from '../context/AuthContext'
 
-function SignIn() {
+function SignUp() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [confirmPassword, setConfirmPassword] = useState('')
+  const [fullName, setFullName] = useState('')
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
   
   const navigate = useNavigate()
-  const { signInUser } = UserAuth()
+  const { signUpNewUser } = UserAuth()
 
-  const handleSignIn = async (e) => {
+  const handleSignUp = async (e) => {
     e.preventDefault()
     setError('')
+
+    // Validate passwords match
+    if (password !== confirmPassword) {
+      setError('Passwords do not match')
+      return
+    }
+
+    // Validate password length
+    if (password.length < 6) {
+      setError('Password must be at least 6 characters')
+      return
+    }
+
     setLoading(true)
 
-    const result = await signInUser(email, password)
+    // THIS IS THE IMPORTANT PART, Call Supabase
+    const result = await signUpNewUser(email, password, { 
+      full_name: fullName 
+    })
     
     setLoading(false)
 
     if (result.success) {
-      navigate('/')
+      alert('Success! Check your email to verify your account.')
+      navigate('/signin')
     } else {
-      setError(result.error)
+      setError(result.error?.message || 'Sign up failed')
     }
   }
 
@@ -35,11 +54,23 @@ function SignIn() {
     <main className="main-content">
       <div className="signin-container">
         <div className="signin-box">
-          <h2 className="signin-title">User Sign In</h2>
+          <h2 className="signin-title">Create Account</h2>
           
           {error && <div className="error-message">{error}</div>}
           
-          <form onSubmit={handleSignIn}>
+          <form onSubmit={handleSignUp}>
+            <div className="form-group">
+              <label htmlFor="fullName">full name:</label>
+              <input
+                type="text"
+                id="fullName"
+                placeholder="e.g. John Doe"
+                value={fullName}
+                onChange={(e) => setFullName(e.target.value)}
+                required
+              />
+            </div>
+
             <div className="form-group">
               <label htmlFor="email">email:</label>
               <input
@@ -57,10 +88,24 @@ function SignIn() {
               <input
                 type="password"
                 id="password"
-                placeholder="e.g. password123"
+                placeholder="minimum 6 characters"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
+                minLength={6}
+              />
+            </div>
+
+            <div className="form-group">
+              <label htmlFor="confirmPassword">confirm password:</label>
+              <input
+                type="password"
+                id="confirmPassword"
+                placeholder="re-enter password"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                required
+                minLength={6}
               />
             </div>
 
@@ -78,18 +123,18 @@ function SignIn() {
                 className="signin-btn"
                 disabled={loading}
               >
-                {loading ? 'Signing In...' : 'Sign In'}
+                {loading ? 'Creating Account...' : 'Sign Up'}
               </button>
             </div>
-            
-            <p className="signin-link">
-              Don't have an account? <a href="/signup">Sign Up</a>
-            </p>
           </form>
+
+          <p className="signin-link">
+            Already have an account? <a href="/signin">Sign In</a>
+          </p>
         </div>
       </div>
     </main>
   )
 }
 
-export default SignIn
+export default SignUp
