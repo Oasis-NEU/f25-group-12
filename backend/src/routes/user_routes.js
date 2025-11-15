@@ -1,5 +1,6 @@
 import express from 'express'
 import * as db from '../services/database.js'
+import { validateRole } from '../middleware/ValidateRole.js'
 
 const router = express.Router()
 
@@ -24,7 +25,7 @@ router.get('/:id', async (req, res) => {
 })
 
 // Create user
-router.post('/', async (req, res) => {
+router.post('/', validateRole, async (req, res) => {
   try {
     const newUser = await db.createUser(req.body)
     res.status(201).json(newUser)
