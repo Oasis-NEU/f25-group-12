@@ -8,6 +8,7 @@ import SignUp from './Pages/SignUp'
 import Profile from './Pages/Profile'
 import ProtectedRoute from './Components/ProtectedRoute'
 import CreateIssue from './Pages/CreateIssue'
+import CreateProperty from './Pages/CreateProperty'
 import './App.css'
 
 function App() {
@@ -38,7 +39,15 @@ function App() {
                 <ProtectedRoute>
                   <CreateIssue />
                 </ProtectedRoute>
-              } 
+              }
+            />
+            <Route 
+              path="/create-property" 
+              element={
+                <ProtectedRoute>
+                  <CreateProperty />
+                </ProtectedRoute>
+              }
             />
           </Routes>
         </div>
