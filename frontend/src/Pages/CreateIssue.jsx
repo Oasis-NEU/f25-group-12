@@ -100,7 +100,7 @@ function CreateIssue() {
             reported_by: userProfile.user_id,
             date_reported: new Date().toISOString(),
             date_resolved: null,
-            assigned_to: null
+            assigned_to: formData.user_id
           }
         ])
         .select()
@@ -197,9 +197,10 @@ function CreateIssue() {
                 onChange={handleChange}
                 required
               >
-                <option value="LOW">Low</option>
+                <option value="MINOR">Minor</option>
                 <option value="MEDIUM">Medium</option>
                 <option value="HIGH">High</option>
+                <option value="URGENT">Urgent</option>
               </select>
             </div>
 
@@ -213,7 +214,7 @@ function CreateIssue() {
                 required
               >
                 <option value="OPEN">Open</option>
-                <option value="IN_PROGRESS">In Progress</option>
+                <option value="INPROGRESS">In Progress</option>
                 <option value="RESOLVED">Resolved</option>
                 <option value="CLOSED">Closed</option>
               </select>
