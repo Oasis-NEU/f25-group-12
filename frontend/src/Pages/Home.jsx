@@ -165,14 +165,25 @@ function Home() {
 
   return (
     <main className="main-content">
-      {/* User Info Header */}
-      {userProfile && (
-        <div className="user-info-header">
-          <h2>My Maintenance Reports</h2>
-          <span className="role-badge">{userProfile.role}</span>
-        </div>
-      )}
+      {/* Sidebar + user header */}
+      <div className="top-section">
+        <aside className="sidenav">
+          <div className="sidenav-title">Properties</div>
 
+          <ul className="property-list">
+            {Array.from(new Set(reports.map(r => r.property))).map(prop => (
+              <li key={prop} className="property-list-item">{prop}</li>
+            ))}
+          </ul>
+        </aside>
+
+        {userProfile && (
+          <div className="user-info-header">
+            <h2>My Maintenance Reports</h2>
+            <span className="role-badge">{userProfile.role}</span>
+          </div>
+        )}
+      </div>
       {/* Reports List */}
       <section className="reports-section">
         <div className="reports-grid">
@@ -228,7 +239,7 @@ function Home() {
                 >
                   {report.dateTime}
                 </div>
-              </>
+              </div>
             ))
           )}
         </div>

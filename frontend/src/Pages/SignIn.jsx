@@ -64,6 +64,12 @@ function SignIn() {
               />
             </div>
 
+            <div className="signup-button">
+              <nav className="nav">
+                <Link to="/signup" className="nav-link" class="text-blue">Sign Up</Link>
+              </nav>
+            </div>
+
             <div className="signin-buttons">
               <button 
                 type="button" 
