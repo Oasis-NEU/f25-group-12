@@ -95,11 +95,18 @@ function Home() {
       // Transform data
       const formattedReports = (issues || []).map(issue => ({
         id: issue.issue_id,
-        property: propertiesMap[issue.property_id]?.name || issue.title || `Issue #${issue.issue_id}`,
+        title: issue.title || `Issue #${issue.issue_id}`,
+        property: issue.property_id 
+          ? (propertiesMap[issue.property_id]?.name || 'Unknown Property')
+          : 'No Property',
+        propertyAddress: issue.property_id 
+          ? propertiesMap[issue.property_id]?.address 
+          : null,
         user: usersMap[issue.reported_by]?.full_name || `User ${issue.reported_by}`,
         description: issue.description || 'No description',
         dateTime: new Date(issue.date_reported).toLocaleString(),
-        status: issue.status?.toLowerCase() || 'unresolved'
+        status: issue.status?.toLowerCase() || 'open',
+        priority: issue.priority || 'MEDIUM'
       }))
       
       setReports(formattedReports)
@@ -146,8 +153,15 @@ function Home() {
   }
 
   // Calculate stats
-  const unresolvedCount = reports.filter(r => r.status === 'unresolved' || r.status === 'open').length
-  const ongoingCount = reports.filter(r => r.status === 'ongoing' || r.status === 'in_progress').length
+  const unresolvedCount = reports.filter(r => 
+    r.status === 'open' || r.status === 'unresolved'
+  ).length
+  const ongoingCount = reports.filter(r => 
+    r.status === 'in_progress' || r.status === 'ongoing'
+  ).length
+  const resolvedCount = reports.filter(r => 
+    r.status === 'resolved' || r.status === 'closed'
+  ).length
 
   return (
     <main className="main-content">
@@ -164,34 +178,54 @@ function Home() {
         <div className="reports-grid">
           {/* Headers */}
           <div className="report-header">Property</div>
+          <div className="report-header">Issue</div>
           <div className="report-header">User</div>
           <div className="report-header">Description</div>
           <div className="report-header">Date + Time</div>
 
           {/* Report Rows */}
           {reports.length === 0 ? (
-          <div className="no-reports" style={{ gridColumn: '1 / -1', textAlign: 'center', padding: '2rem' }}>
-            <p>No reports found.</p>
-            <button 
-              onClick={() => navigate('/create-issue')}
-              className="add-btn"
-            >
-              + Create Your First Issue
-            </button>
-          </div>
+            <div className="no-reports" style={{ gridColumn: '1 / -1', textAlign: 'center', padding: '2rem' }}>
+              <p>No reports found.</p>
+              <button 
+                onClick={() => navigate('/create-issue')}
+                className="add-btn"
+              >
+                + Create Your First Issue
+              </button>
+            </div>
           ) : (
             reports.map((report) => (
               <>
-                <div key={`${report.id}-property`} className={`report-cell property-cell ${report.status}`}>
+                <div 
+                  key={`${report.id}-property`} 
+                  className={`report-cell property-cell ${report.status}`}
+                  title={report.propertyAddress || report.property}
+                >
                   {report.property}
                 </div>
-                <div key={`${report.id}-user`} className="report-cell">
+                <div 
+                  key={`${report.id}-issue`} 
+                  className="report-cell"
+                >
+                  {report.title}
+                </div>
+                <div 
+                  key={`${report.id}-user`} 
+                  className="report-cell"
+                >
                   {report.user}
                 </div>
-                <div key={`${report.id}-description`} className="report-cell description">
+                <div 
+                  key={`${report.id}-description`} 
+                  className="report-cell description"
+                >
                   {report.description}
                 </div>
-                <div key={`${report.id}-datetime`} className="report-cell">
+                <div 
+                  key={`${report.id}-datetime`} 
+                  className="report-cell"
+                >
                   {report.dateTime}
                 </div>
               </>
