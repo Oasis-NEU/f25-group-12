@@ -607,3 +607,10 @@ body {
     color: white;
     border-color: #FF8C42;
 }
+
+.reports-grid {
+  display: grid;
+  grid-template-columns: 1.5fr 1.5fr 1fr 2fr 1.5fr; /* 5 columns now instead of 4 */
+  gap: 1rem;
+  padding: 1rem;
+}
