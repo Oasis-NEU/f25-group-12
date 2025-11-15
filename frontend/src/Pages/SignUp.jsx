@@ -7,6 +7,7 @@ function SignUp() {
   const [password, setPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
   const [fullName, setFullName] = useState('')
+  const [role, setRole] = useState('')
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
   
@@ -33,7 +34,8 @@ function SignUp() {
 
     // THIS IS THE IMPORTANT PART, Call Supabase
     const result = await signUpNewUser(email, password, { 
-      full_name: fullName 
+      full_name: fullName,
+      role
     })
     
     setLoading(false)
@@ -107,6 +109,21 @@ function SignUp() {
                 required
                 minLength={6}
               />
+            </div>
+
+            <div className="form-group">
+              <label htmlFor="role">Select Role:</label>
+              <select
+                id="role"
+                value={role}
+                onChange={(e) => setRole(e.target.value)}
+                required
+              >
+                <option value="" disabled>Select a role</option> {/* placeholder */}
+                <option value="CLIENT">Client</option>
+                <option value="TECHNICIAN">Technician</option>
+                <option value="ADMIN">Admin</option>
+              </select>
             </div>
 
             <div className="signin-buttons">
