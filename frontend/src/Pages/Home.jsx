@@ -57,11 +57,25 @@ function Home() {
 
   return (
     <main className="main-content">
+      {/* side nav */}
+      <div className="sidenav">
+        <div className="sidenav-title">Properties</div>
+
+        <ul className="property-list">
+          {Array.from(new Set(reports.map(r => r.property))).map(prop => (
+            <li
+              key={prop}
+              className="property-list-item"
+            >
+              {prop}
+            </li>
+          ))}
+        </ul>
+      </div>
       {/* Reports List */}
       <section className="reports-section">
         <div className="reports-grid">
           {/* Headers */}
-          <div className="report-header">Property</div>
           <div className="report-header">User</div>
           <div className="report-header">Description</div>
           <div className="report-header">Date + Time</div>

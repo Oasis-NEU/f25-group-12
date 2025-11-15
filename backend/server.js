@@ -8,7 +8,7 @@ import propertyRoutes from './src/routes/property_routes.js'
 dotenv.config()
 
 const app = express()
-const PORT = process.env.PORT || 5000
+const PORT = process.env.PORT || 5001
 
 // Middleware - CORS must be before routes
 app.use(cors({
