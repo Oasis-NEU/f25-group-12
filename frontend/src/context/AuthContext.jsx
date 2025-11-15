@@ -7,18 +7,21 @@ export const AuthProvider = ({ children }) => {
   const [session, setSession] = useState(undefined);
 
   // Sign up
-  const signUpNewUser = async (email, password) => {
-    const { data, error } = await supabase.auth.signUp({
-      email: email.toLowerCase(),
-      password: password,
-    });
+  const signUpNewUser = async (email, password, metadata = {}) => {
+  const { data, error } = await supabase.auth.signUp({
+    email: email.toLowerCase(),
+    password: password,
+    options: {
+      data: metadata,
+    },
+  })
 
-    if (error) {
-      console.error("Error signing up: ", error);
-      return { success: false, error };
-    }
+  if (error) {
+    console.error("Error signing up: ", error)
+    return { success: false, error }
+  }
 
-    return { success: true, data };
+  return { success: true, data }
   };
 
   // Sign in
