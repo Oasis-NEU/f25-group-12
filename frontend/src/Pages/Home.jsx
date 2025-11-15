@@ -223,10 +223,8 @@ function Home() {
         <div className="chart">
           <div className="chart-bars">
             {(() => {
-              // build bar data for the last 7 days
               const daysToShow = 7
               const now = new Date()
-              // array of day start dates (oldest -> newest)
               const days = Array.from({ length: daysToShow }).map((_, i) => {
                 const d = new Date(now)
                 d.setHours(0, 0, 0, 0)
@@ -234,7 +232,6 @@ function Home() {
                 return d
               })
 
-              // count incidents per day using dateRaw
               const counts = days.map(day => {
                 const dayStr = day.toDateString()
                 return reports.filter(r => {
@@ -276,9 +273,6 @@ function Home() {
           </div>
           <div className="stat-card">
             <p>Ongoing Issues: <strong>{ongoingCount}</strong></p>
-          </div>
-          <div className="stat-card">
-            <p>Resolved Issues: <strong>{resolvedCount}</strong></p>
           </div>
           <div className="stat-card">
             <p>Total Reports: <strong>{reports.length}</strong></p>
