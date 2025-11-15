@@ -1,26 +1,102 @@
 import { useState, useEffect } from 'react'
-import { getIssues } from '../api/api'
+import { useNavigate } from 'react-router-dom'
+import { UserAuth } from '../context/AuthContext'
+import { supabase } from '../services/supabase'
 
 function Home() {
   const [reports, setReports] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
+  const [userProfile, setUserProfile] = useState(null)
+  
+  const { session } = UserAuth()
+  const navigate = useNavigate()
 
   useEffect(() => {
-    fetchReports()
-  }, [])
+    if (session) {
+      fetchReports()
+    } else {
+      setLoading(false)
+    }
+  }, [session])
 
   const fetchReports = async () => {
     try {
       setLoading(true)
       setError(null)
-      const data = await getIssues()
+
+      // First, get the user's profile
+      const { data: profile, error: profileError } = await supabase
+        .from('Users')
+        .select('user_id, role, full_name')
+        .eq('auth_id', session.user.id)
+        .single()
+
+      if (profileError) throw profileError
+      setUserProfile(profile)
+
+      // Fetch issues based on user role
+      let issuesQuery = supabase
+        .from('Issues')
+        .select('*')
+        .order('date_reported', { ascending: false })
+
+      // CLIENT users only see their own issues
+      if (profile.role === 'CLIENT') {
+        issuesQuery = issuesQuery.or(`reported_by.eq.${profile.user_id},assigned_to.eq.${profile.user_id}`)
+      }
+      // TECHNICIAN sees issues assigned to them
+      else if (profile.role === 'TECHNICIAN') {
+        issuesQuery = issuesQuery.eq('assigned_to', profile.user_id)
+      }
+      // ADMIN sees everything (no filter)
       
-      // Transform data to match your component structure
-      const formattedReports = data.map(issue => ({
-        id: issue.issues_id,
-        property: issue.title || `Issue #${issue.issues_id}`,
-        user: `User ${issue.user_id || 'Unknown'}`,
+      const { data: issues, error: issuesError } = await issuesQuery
+
+      if (issuesError) throw issuesError
+
+      // Fetch all unique user IDs
+      const userIds = new Set()
+      issues?.forEach(issue => {
+        if (issue.reported_by) userIds.add(issue.reported_by)
+        if (issue.assigned_to) userIds.add(issue.assigned_to)
+      })
+
+      // Fetch user details
+      const { data: users } = await supabase
+        .from('Users')
+        .select('user_id, full_name, email')
+        .in('user_id', Array.from(userIds))
+
+      const usersMap = {}
+      users?.forEach(user => {
+        usersMap[user.user_id] = user
+      })
+
+      // Fetch properties (if they exist)
+      let propertiesMap = {}
+      if (issues && issues.length > 0) {
+        const propertyIds = issues
+          .map(i => i.property_id)
+          .filter(Boolean)
+        
+        if (propertyIds.length > 0) {
+          const { data: properties } = await supabase
+            .from('Properties')
+            .select('property_id, name, address')
+            .in('property_id', propertyIds)
+          
+          properties?.forEach(prop => {
+            propertiesMap[prop.property_id] = prop
+          })
+        }
+      }
+      
+      // Transform data
+      const formattedReports = (issues || []).map(issue => ({
+        id: issue.issue_id,
+        property: propertiesMap[issue.property_id]?.name || issue.title || `Issue #${issue.issue_id}`,
+        user: usersMap[issue.reported_by]?.full_name || `User ${issue.reported_by}`,
         description: issue.description || 'No description',
         dateTime: new Date(issue.date_reported).toLocaleString(),
         status: issue.status?.toLowerCase() || 'unresolved'
@@ -33,6 +109,24 @@ function Home() {
     } finally {
       setLoading(false)
     }
+  }
+
+  // If not logged in, show a message
+  if (!session && !loading) {
+    return (
+      <main className="main-content">
+        <div className="welcome-message">
+          <h2>Welcome to Maintenance Reporter</h2>
+          <p>Please sign in to view your maintenance reports.</p>
+          <button 
+            className="signin-btn"
+            onClick={() => navigate('/signin')}
+          >
+            Sign In
+          </button>
+        </div>
+      </main>
+    )
   }
 
   if (loading) {
@@ -52,11 +146,19 @@ function Home() {
   }
 
   // Calculate stats
-  const unresolvedCount = reports.filter(r => r.status === 'unresolved').length
-  const ongoingCount = reports.filter(r => r.status === 'ongoing').length
+  const unresolvedCount = reports.filter(r => r.status === 'unresolved' || r.status === 'open').length
+  const ongoingCount = reports.filter(r => r.status === 'ongoing' || r.status === 'in_progress').length
 
   return (
     <main className="main-content">
+      {/* User Info Header */}
+      {userProfile && (
+        <div className="user-info-header">
+          <h2>My Maintenance Reports</h2>
+          <span className="role-badge">{userProfile.role}</span>
+        </div>
+      )}
+
       {/* Reports List */}
       <section className="reports-section">
         <div className="reports-grid">
@@ -68,9 +170,15 @@ function Home() {
 
           {/* Report Rows */}
           {reports.length === 0 ? (
-            <div className="no-reports" style={{ gridColumn: '1 / -1', textAlign: 'center', padding: '2rem' }}>
-              No reports found
-            </div>
+          <div className="no-reports" style={{ gridColumn: '1 / -1', textAlign: 'center', padding: '2rem' }}>
+            <p>No reports found.</p>
+            <button 
+              onClick={() => navigate('/create-issue')}
+              className="add-btn"
+            >
+              + Create Your First Issue
+            </button>
+          </div>
           ) : (
             reports.map((report) => (
               <>
