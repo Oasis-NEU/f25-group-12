@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, Fragment } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { UserAuth } from '../context/AuthContext'
 import { supabase } from '../services/supabase'
@@ -93,21 +93,15 @@ function Home() {
       }
       
       // Transform data
-      const formattedReports = (issues || []).map(issue => ({
-        id: issue.issue_id,
-        title: issue.title || `Issue #${issue.issue_id}`,
-        property: issue.property_id 
-          ? (propertiesMap[issue.property_id]?.name || 'Unknown Property')
-          : 'No Property',
-        propertyAddress: issue.property_id 
-          ? propertiesMap[issue.property_id]?.address 
-          : null,
-        user: usersMap[issue.reported_by]?.full_name || `User ${issue.reported_by}`,
-        description: issue.description || 'No description',
-        dateTime: new Date(issue.date_reported).toLocaleString(),
-        status: issue.status?.toLowerCase() || 'open',
-        priority: issue.priority || 'MEDIUM'
-      }))
+        const formattedReports = (issues || []).map(issue => ({
+          id: issue.issue_id,
+          property: propertiesMap[issue.property_id]?.name || issue.title || `Issue #${issue.issue_id}`,
+          user: usersMap[issue.reported_by]?.full_name || `User ${issue.reported_by}`,
+          description: issue.description || 'No description',
+          dateTime: new Date(issue.date_reported).toLocaleString(),
+          dateRaw: issue.date_reported,
+          status: issue.status?.toLowerCase() || 'unresolved'
+        }))
       
       setReports(formattedReports)
     } catch (err) {
@@ -153,15 +147,9 @@ function Home() {
   }
 
   // Calculate stats
-  const unresolvedCount = reports.filter(r => 
-    r.status === 'open' || r.status === 'unresolved'
-  ).length
-  const ongoingCount = reports.filter(r => 
-    r.status === 'in_progress' || r.status === 'ongoing'
-  ).length
-  const resolvedCount = reports.filter(r => 
-    r.status === 'resolved' || r.status === 'closed'
-  ).length
+  const unresolvedCount = reports.filter(r => r.status === 'unresolved' || r.status === 'open').length
+  const ongoingCount = reports.filter(r => r.status === 'ongoing' || r.status === 'in_progress').length
+  const resolvedCount = reports.filter(r => r.status === 'resolved' || r.status === 'closed').length
 
   return (
     <main className="main-content">
@@ -207,39 +195,20 @@ function Home() {
             </div>
           ) : (
             reports.map((report) => (
-              <>
-                <div 
-                  key={`${report.id}-property`} 
-                  className={`report-cell property-cell ${report.status}`}
-                  title={report.propertyAddress || report.property}
-                >
+              <Fragment key={report.id}>
+                <div className={`report-cell property-cell ${report.status}`}>
                   {report.property}
                 </div>
-                <div 
-                  key={`${report.id}-issue`} 
-                  className="report-cell"
-                >
-                  {report.title}
-                </div>
-                <div 
-                  key={`${report.id}-user`} 
-                  className="report-cell"
-                >
+                <div className="report-cell">
                   {report.user}
                 </div>
-                <div 
-                  key={`${report.id}-description`} 
-                  className="report-cell description"
-                >
+                <div className="report-cell description">
                   {report.description}
                 </div>
-                <div 
-                  key={`${report.id}-datetime`} 
-                  className="report-cell"
-                >
+                <div className="report-cell">
                   {report.dateTime}
                 </div>
-              </div>
+              </Fragment>
             ))
           )}
         </div>
@@ -265,12 +234,48 @@ function Home() {
       <section className="dashboard">
         <div className="chart">
           <div className="chart-bars">
-            <div className="bar" style={{ height: '40%', backgroundColor: '#D3D3D3' }}></div>
-            <div className="bar" style={{ height: '60%', backgroundColor: '#D3D3D3' }}></div>
-            <div className="bar" style={{ height: '80%', backgroundColor: '#FF6B47' }}></div>
-            <div className="bar" style={{ height: '90%', backgroundColor: '#FF6B47' }}></div>
-            <div className="bar" style={{ height: '100%', backgroundColor: '#FF6B47' }}></div>
-            <div className="bar" style={{ height: '70%', backgroundColor: '#FF6B47' }}></div>
+            {(() => {
+              const daysToShow = 7
+              const now = new Date()
+              const days = Array.from({ length: daysToShow }).map((_, i) => {
+                const d = new Date(now)
+                d.setHours(0, 0, 0, 0)
+                d.setDate(d.getDate() - (daysToShow - 1 - i))
+                return d
+              })
+
+              const counts = days.map(day => {
+                const dayStr = day.toDateString()
+                return reports.filter(r => {
+                  if (!r.dateRaw) return false
+                  const dt = new Date(r.dateRaw)
+                  return dt.toDateString() === dayStr
+                }).length
+              })
+
+              const maxCount = Math.max(...counts, 1)
+
+              const barData = days.map((day, idx) => {
+                const count = counts[idx]
+                const height = Math.round((count / maxCount) * 100)
+                return {
+                  id: day.toISOString().slice(0,10),
+                  label: day.toLocaleDateString(undefined, { month: 'short', day: 'numeric' }),
+                  count,
+                  height,
+                  color: count === 0 ? '#D3D3D3' : '#FF6B47'
+                }
+              })
+
+              return barData.map(bar => (
+                <div
+                  key={bar.id}
+                  className="bar"
+                  title={`${bar.label}: ${bar.count} incident${bar.count === 1 ? '' : 's'}`}
+                  style={{ height: `${bar.height}%`, backgroundColor: bar.color }}
+                ></div>
+              ))
+            })()}
           </div>
         </div>
         
