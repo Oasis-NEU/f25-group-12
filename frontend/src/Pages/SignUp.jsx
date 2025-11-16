@@ -134,7 +134,6 @@ function SignUp() {
                <option value="" disabled>Select a role</option> {/* placeholder */}
                <option value="CLIENT">Client</option>
                <option value="TECHNICIAN">Technician</option>
-               <option value="ADMIN">Admin</option>
              </select>
            </div>
 

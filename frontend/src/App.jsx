@@ -9,6 +9,7 @@ import Profile from './Pages/Profile'
 import ProtectedRoute from './Components/ProtectedRoute'
 import CreateIssue from './Pages/CreateIssue'
 import CreateProperty from './Pages/CreateProperty'
+import EditIssue from './pages/EditIssue'
 import './App.css'
 
 function App() {
@@ -22,6 +23,8 @@ function App() {
             <Route path="/about" element={<About />} />
             <Route path="/signin" element={<SignIn />} />
             <Route path="/signup" element={<SignUp />} />
+            <Route path="/edit-issue/:issueId" element={<EditIssue />} />
+
             
             {/* Protected Profile Route */}
             {/* We can and SHOULD and more protected routes as needed. */}
