@@ -185,6 +185,25 @@ function Home() {
     r.status === 'resolved' || r.status === 'closed'
   ).length
 
+  // Calculate priority counts for bar chart
+  const priorityCounts = {
+    URGENT: reports.filter(r => r.priority === 'URGENT').length,
+    HIGH: reports.filter(r => r.priority === 'HIGH').length,
+    MEDIUM: reports.filter(r => r.priority === 'MEDIUM').length,
+    MINOR: reports.filter(r => r.priority === 'MINOR').length
+  }
+
+  // Find max for scaling
+  const maxCount = Math.max(...Object.values(priorityCounts), 1)
+
+  // Generate bar data
+  const barData = [
+    { label: 'Urgent', count: priorityCounts.URGENT, color: '#521000' },
+    { label: 'High', count: priorityCounts.HIGH, color: '#ff4242' },
+    { label: 'Medium', count: priorityCounts.MEDIUM, color: '#FFA500' },
+    { label: 'Minor', count: priorityCounts.MINOR, color: '#D3D3D3' }
+  ]
+
   return (
     <main className="main-content">
       {/* User Info Header */}
@@ -277,26 +296,99 @@ function Home() {
 
       {/* Dashboard */}
       <section className="dashboard">
-        <div className="chart">
-          <div className="chart-bars">
-            <div className="bar" style={{ height: '40%', backgroundColor: '#D3D3D3' }}></div>
-            <div className="bar" style={{ height: '60%', backgroundColor: '#D3D3D3' }}></div>
-            <div className="bar" style={{ height: '80%', backgroundColor: '#FF6B47' }}></div>
-            <div className="bar" style={{ height: '90%', backgroundColor: '#FF6B47' }}></div>
-            <div className="bar" style={{ height: '100%', backgroundColor: '#FF6B47' }}></div>
-            <div className="bar" style={{ height: '70%', backgroundColor: '#FF6B47' }}></div>
+        <h3 className="dashboard-title">Dashboard Overview</h3>
+        
+        {/* Status Cards */}
+        <div className="status-cards">
+          <div className="status-card status-open">
+            <div className="status-icon">🔴</div>
+            <div className="status-info">
+              <div className="status-number">{unresolvedCount}</div>
+              <div className="status-label">Open Issues</div>
+            </div>
+          </div>
+          
+          <div className="status-card status-progress">
+            <div className="status-icon">🟠</div>
+            <div className="status-info">
+              <div className="status-number">{ongoingCount}</div>
+              <div className="status-label">In Progress</div>
+            </div>
+          </div>
+          
+          <div className="status-card status-resolved">
+            <div className="status-icon">🟢</div>
+            <div className="status-info">
+              <div className="status-number">{resolvedCount}</div>
+              <div className="status-label">Resolved</div>
+            </div>
+          </div>
+          
+          <div className="status-card status-total">
+            <div className="status-icon">📊</div>
+            <div className="status-info">
+              <div className="status-number">{reports.length}</div>
+              <div className="status-label">Total Issues</div>
+            </div>
           </div>
         </div>
-        
-        <div className="stats">
-          <div className="stat-card">
-            <p>Unresolved Logs: <strong>{unresolvedCount}</strong></p>
-          </div>
-          <div className="stat-card">
-            <p>Ongoing Issues: <strong>{ongoingCount}</strong></p>
-          </div>
-          <div className="stat-card">
-            <p>Total Reports: <strong>{reports.length}</strong></p>
+
+        {/* Priority Breakdown */}
+        <div className="priority-section">
+          <h4>Priority Breakdown</h4>
+          <div className="priority-bars">
+            {priorityCounts.URGENT > 0 && (
+              <div className="priority-row">
+                <span className="priority-row-label">Urgent</span>
+                <div className="priority-bar-container">
+                  <div 
+                    className="priority-bar urgent-bar" 
+                    style={{ width: `${(priorityCounts.URGENT / reports.length) * 100}%` }}
+                  >
+                    <span className="priority-bar-count">{priorityCounts.URGENT}</span>
+                  </div>
+                </div>
+              </div>
+            )}
+            {priorityCounts.HIGH > 0 && (
+              <div className="priority-row">
+                <span className="priority-row-label">High</span>
+                <div className="priority-bar-container">
+                  <div 
+                    className="priority-bar high-bar" 
+                    style={{ width: `${(priorityCounts.HIGH / reports.length) * 100}%` }}
+                  >
+                    <span className="priority-bar-count">{priorityCounts.HIGH}</span>
+                  </div>
+                </div>
+              </div>
+            )}
+            {priorityCounts.MEDIUM > 0 && (
+              <div className="priority-row">
+                <span className="priority-row-label">Medium</span>
+                <div className="priority-bar-container">
+                  <div 
+                    className="priority-bar medium-bar" 
+                    style={{ width: `${(priorityCounts.MEDIUM / reports.length) * 100}%` }}
+                  >
+                    <span className="priority-bar-count">{priorityCounts.MEDIUM}</span>
+                  </div>
+                </div>
+              </div>
+            )}
+            {priorityCounts.MINOR > 0 && (
+              <div className="priority-row">
+                <span className="priority-row-label">Minor</span>
+                <div className="priority-bar-container">
+                  <div 
+                    className="priority-bar minor-bar" 
+                    style={{ width: `${(priorityCounts.MINOR / reports.length) * 100}%` }}
+                  >
+                    <span className="priority-bar-count">{priorityCounts.MINOR}</span>
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
         </div>
 
