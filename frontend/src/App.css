@@ -201,11 +201,11 @@ body {
 }
 
 .legend-color.unresolved {
-    background-color: #D3D3D3;
+    background-color: #FF6B47;
 }
 
 .legend-color.ongoing {
-    background-color: #FF6B47;
+    background-color: #ff0000;
 }
 
 /* Dashboard */
@@ -665,14 +665,6 @@ body {
     color: #ffffff;
 }
 
-.reports-grid {
-  display: grid;
-  grid-template-columns: 1fr 1.3fr 0.8fr 1fr 1fr 2fr 1.2fr; 
-  /* Property, Issue, Priority, Reported By, Assigned To, Description, Date+Time */
-  gap: 0;
-  border: 1px solid #ddd;
-}
-
 .priority-badge {
   display: inline-block;
   padding: 4px 12px;
@@ -701,4 +693,86 @@ body {
 .priority-minor {
   background-color: #D3D3D3;
   color: #000;
+}
+
+/* Update grid to 8 columns */
+.reports-grid {
+  display: grid;
+  grid-template-columns: 1fr 1.3fr 0.8fr 1fr 1fr 2fr 1fr 0.7fr; 
+  /* Property, Issue, Priority, Reported By, Assigned To, Description, Date, Actions */
+  gap: 0;
+  border: 1px solid #ddd;
+}
+
+/* Actions cell */
+.actions-cell {
+  justify-content: center;
+}
+
+/* Edit button in grid */
+.edit-btn-small {
+  background-color: #FF8C42;
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.85em;
+  font-weight: 500;
+  transition: background-color 0.2s;
+}
+
+.edit-btn-small:hover {
+  background-color: #ff7a28;
+}
+
+/* Delete button */
+.delete-btn {
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 16px;
+}
+
+.delete-btn:hover {
+  background-color: #c82333;
+}
+
+.delete-btn:disabled {
+  background-color: #666;
+  cursor: not-allowed;
+}
+
+/* Status-based coloring for property cells */
+.property-cell.open,
+.property-cell.unresolved {
+  border-left: 4px solid #FF6B47; /* Orange/Red for open */
+  background-color: #fff5f3;
+}
+
+.property-cell.ongoing,
+.property-cell.inprogress,
+.property-cell.in_progress {
+  border-left: 4px solid #FFA500; /* Orange for ongoing */
+  background-color: #fff8e6;
+}
+
+.property-cell.resolved,
+.property-cell.closed {
+  border-left: 4px solid #5eff00; /* Bright green for resolved */
+  background-color: #f0ffe6;
+}
+
+.report-cell.unassigned {
+  color: #999;
+  font-style: italic;
+}
+
+.report-cell.description {
+  font-size: 0.9em;
+  color: #666;
 }

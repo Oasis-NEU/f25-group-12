@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { UserAuth } from '../context/AuthContext'
 import { supabase } from '../services/supabase'
+import React from 'react'
 
 function Home() {
   const [reports, setReports] = useState([])
@@ -204,7 +205,8 @@ function Home() {
           <div className="report-header">Reported By</div>
           <div className="report-header">Assigned To</div>
           <div className="report-header">Description</div>
-          <div className="report-header">Date + Time</div>
+          <div className="report-header">Date Reported</div>
+          <div className="report-header">Actions</div>
 
           {/* Report Rows */}
           {reports.length === 0 ? (
@@ -219,53 +221,39 @@ function Home() {
             </div>
           ) : (
             reports.map((report) => (
-              <>
-                <div 
-                  key={`${report.id}-property`} 
-                  className={`report-cell property-cell ${report.status}`}
-                  title={report.propertyAddress || report.property}
-                >
+              <React.Fragment key={report.id}>
+                <div className={`report-cell property-cell ${report.status}`} title={report.propertyAddress || report.property}>
                   {report.property}
                 </div>
-                <div 
-                  key={`${report.id}-issue`} 
-                  className="report-cell"
-                >
+                <div className="report-cell">
                   {report.title}
                 </div>
-                <div 
-                  key={`${report.id}-priority`} 
-                  className="report-cell"
-                >
+                <div className="report-cell">
                   <span className={`priority-badge priority-${report.priority.toLowerCase()}`}>
                     {report.priority}
                   </span>
                 </div>
-                <div 
-                  key={`${report.id}-user`} 
-                  className="report-cell"
-                >
+                <div className="report-cell">
                   {report.user}
                 </div>
-                <div 
-                  key={`${report.id}-assigned`} 
-                  className={`report-cell ${report.assignedTo === 'Unassigned' ? 'unassigned' : ''}`}
-                >
+                <div className={`report-cell ${report.assignedTo === 'Unassigned' ? 'unassigned' : ''}`}>
                   {report.assignedTo}
                 </div>
-                <div 
-                  key={`${report.id}-description`} 
-                  className="report-cell description"
-                >
+                <div className="report-cell description">
                   {report.description}
                 </div>
-                <div 
-                  key={`${report.id}-datetime`} 
-                  className="report-cell"
-                >
+                <div className="report-cell">
                   {report.dateTime}
                 </div>
-              </>
+                <div className="report-cell actions-cell">
+                  <button 
+                    className="edit-btn-small"
+                    onClick={() => navigate(`/edit-issue/${report.id}`)}
+                  >
+                    Edit
+                  </button>
+                </div>
+              </React.Fragment>
             ))
           )}
         </div>
