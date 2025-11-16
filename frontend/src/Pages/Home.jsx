@@ -393,8 +393,7 @@ function Home() {
         </div>
 
         <div className="decorative-icons">
-          <img src="/cone.png" alt="Cone" className="cone-icon" />
-          <img src="/bucket.png" alt="Bucket" className="bucket-icon" />
+          <img src="/public/Maintenance Reporter Thick Variant.png" alt="Cone" className="cone-icon" />
         </div>
       </section>
     </main>
