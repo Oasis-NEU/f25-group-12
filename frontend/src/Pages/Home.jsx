@@ -207,7 +207,7 @@ function Home() {
             </div>
           ) : (
             reports.map((report) => (
-              <>
+              <div>
                 <div 
                   key={`${report.id}-property`} 
                   className={`report-cell property-cell ${report.status}`}
