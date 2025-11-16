@@ -40,7 +40,7 @@ body {
 
 /* Header */
 .header {
-    background: linear-gradient(90deg, #FF8C42 0%, #f6f4c9 100%, #fdfdfd 50%);
+    background: linear-gradient(90deg, #FF8C42 60%, #f1e0bf 100%, #fdfdfd 50%);
     border-bottom: 3px solid #333;
     padding: 1rem 2rem;
     width: 100%;
@@ -167,20 +167,7 @@ body {
     font-weight: 500;
 }
 
-.property-cell.resolved {
-    background-color: #B3D4E5;
-    color: #333;
-}
 
-.property-cell.unresolved {
-    background-color: #D3D3D3;
-    color: #333;
-}
-
-.property-cell.ongoing {
-    background-color: #FF6B47;
-    color: #fff;
-}
 
 .description {
     overflow: hidden;
@@ -210,7 +197,7 @@ body {
 }
 
 .legend-color.resolved {
-    background-color: #B3D4E5;
+    background-color: #5eff00;
 }
 
 .legend-color.unresolved {
@@ -680,7 +667,38 @@ body {
 
 .reports-grid {
   display: grid;
-  grid-template-columns: 1.5fr 1.5fr 1fr 2fr 1.5fr; /* 5 columns now instead of 4 */
-  gap: 1rem;
-  padding: 1rem;
+  grid-template-columns: 1fr 1.3fr 0.8fr 1fr 1fr 2fr 1.2fr; 
+  /* Property, Issue, Priority, Reported By, Assigned To, Description, Date+Time */
+  gap: 0;
+  border: 1px solid #ddd;
+}
+
+.priority-badge {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 4px;
+  font-size: 0.75em;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.priority-urgent {
+  background-color: #521000;
+  color: white;
+}
+
+.priority-high {
+  background-color: #ff4242;
+  color: white;
+}
+
+.priority-medium {
+  background-color: #FFA500;
+  color: #000;
+}
+
+.priority-minor {
+  background-color: #D3D3D3;
+  color: #000;
 }
