@@ -6,10 +6,10 @@ import About from './Pages/About'
 import SignIn from './Pages/SignIn'
 import SignUp from './Pages/SignUp'
 import Profile from './Pages/Profile'
-import ProtectedRoute from './Components/ProtectedRoute'
+import ProtectedRoute from './components/ProtectedRoute'
 import CreateIssue from './Pages/CreateIssue'
 import CreateProperty from './Pages/CreateProperty'
-import EditIssue from './pages/EditIssue'
+import EditIssue from './Pages/EditIssue'
 import './App.css'
 
 function App() {
