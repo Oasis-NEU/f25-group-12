@@ -27,3 +27,4 @@ dist-ssr
 # ENV secrets
 frontend/.env.development
 backend/.env
+*.env
