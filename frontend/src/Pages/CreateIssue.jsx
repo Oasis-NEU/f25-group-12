@@ -9,9 +9,11 @@ function CreateIssue() {
     description: '',
     priority: 'MEDIUM',
     status: 'OPEN',
-    property_id: ''
+    property_id: '',
+    assigned_to: '' // NEW: Add assigned_to to form state
   })
   const [properties, setProperties] = useState([])
+  const [technicians, setTechnicians] = useState([]) // NEW: State for technicians
   const [userProfile, setUserProfile] = useState(null)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
@@ -22,6 +24,7 @@ function CreateIssue() {
   useEffect(() => {
     if (session) {
       fetchUserData()
+      fetchTechnicians() // NEW: Fetch technicians on load
     }
   }, [session])
 
@@ -56,6 +59,25 @@ function CreateIssue() {
       setError('Failed to load user data')
     }
   }
+
+  // Function to fetch available technicians
+  const fetchTechnicians = async () => {
+  try {
+    // First, let's see ALL users
+    const { data: allUsers, error: allError } = await supabase
+      .from('Users')
+      .select('user_id, full_name, email, role')
+    
+    console.log('All users:', allUsers)
+    
+    // Then filter client-side
+    const techs = allUsers?.filter(user => user.role === 'TECHNICIAN') || []
+    console.log('Filtered technicians:', techs)
+    setTechnicians(techs)
+  } catch (err) {
+    console.error('Error in fetchTechnicians:', err)
+  }
+}
 
   const handleChange = (e) => {
     const { name, value } = e.target
@@ -100,7 +122,7 @@ function CreateIssue() {
             reported_by: userProfile.user_id,
             date_reported: new Date().toISOString(),
             date_resolved: null,
-            assigned_to: formData.user_id
+            assigned_to: formData.assigned_to || null // FIXED: Use selected technician or null
           }
         ])
         .select()
@@ -218,6 +240,26 @@ function CreateIssue() {
                 <option value="RESOLVED">Resolved</option>
                 <option value="CLOSED">Closed</option>
               </select>
+            </div>
+            
+            <div className="form-group">
+              <label htmlFor="assigned_to">Assign Technician:</label>
+              <select
+                id="assigned_to"
+                name="assigned_to"
+                value={formData.assigned_to}
+                onChange={handleChange}
+              >
+                <option value="">Unassigned</option>
+                {technicians.map(tech => (
+                  <option key={tech.user_id} value={tech.user_id}>
+                    {tech.full_name} {tech.email ? `(${tech.email})` : ''}
+                  </option>
+                ))}
+              </select>
+              {technicians.length === 0 && (
+                <small className="form-hint">No technicians available</small>
+              )}
             </div>
 
             <div className="form-buttons">

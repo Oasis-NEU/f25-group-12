@@ -20,6 +20,24 @@ function Home() {
     }
   }, [session])
 
+  // Helper function to format date from database (date only, no time)
+  const formatDateTime = (dateString) => {
+    if (!dateString) return 'N/A'
+    
+    const date = new Date(dateString)
+    
+    // Check if date is valid
+    if (isNaN(date.getTime())) {
+      return 'Invalid Date'
+    }
+    
+    return date.toLocaleDateString('en-US', { 
+      month: 'short', 
+      day: 'numeric', 
+      year: 'numeric'
+    })
+  }
+
   const fetchReports = async () => {
     try {
       setLoading(true)
@@ -103,8 +121,11 @@ function Home() {
           ? propertiesMap[issue.property_id]?.address 
           : null,
         user: usersMap[issue.reported_by]?.full_name || `User ${issue.reported_by}`,
+        assignedTo: issue.assigned_to 
+          ? (usersMap[issue.assigned_to]?.full_name || `User ${issue.assigned_to}`)
+          : 'Unassigned',
         description: issue.description || 'No description',
-        dateTime: new Date(issue.date_reported).toLocaleString(),
+        dateTime: formatDateTime(issue.date_reported),
         status: issue.status?.toLowerCase() || 'open',
         priority: issue.priority || 'MEDIUM'
       }))
@@ -157,7 +178,7 @@ function Home() {
     r.status === 'open' || r.status === 'unresolved'
   ).length
   const ongoingCount = reports.filter(r => 
-    r.status === 'in_progress' || r.status === 'ongoing'
+    r.status === 'in_progress' || r.status === 'ongoing' || r.status === 'inprogress'
   ).length
   const resolvedCount = reports.filter(r => 
     r.status === 'resolved' || r.status === 'closed'
@@ -179,7 +200,9 @@ function Home() {
           {/* Headers */}
           <div className="report-header">Property</div>
           <div className="report-header">Issue</div>
-          <div className="report-header">User</div>
+          <div className="report-header">Priority</div>
+          <div className="report-header">Reported By</div>
+          <div className="report-header">Assigned To</div>
           <div className="report-header">Description</div>
           <div className="report-header">Date + Time</div>
 
@@ -211,10 +234,24 @@ function Home() {
                   {report.title}
                 </div>
                 <div 
+                  key={`${report.id}-priority`} 
+                  className="report-cell"
+                >
+                  <span className={`priority-badge priority-${report.priority.toLowerCase()}`}>
+                    {report.priority}
+                  </span>
+                </div>
+                <div 
                   key={`${report.id}-user`} 
                   className="report-cell"
                 >
                   {report.user}
+                </div>
+                <div 
+                  key={`${report.id}-assigned`} 
+                  className={`report-cell ${report.assignedTo === 'Unassigned' ? 'unassigned' : ''}`}
+                >
+                  {report.assignedTo}
                 </div>
                 <div 
                   key={`${report.id}-description`} 
@@ -241,11 +278,11 @@ function Home() {
           </span>
           <span className="legend-item">
             <span className="legend-color unresolved"></span>
-            Unresolved
+            Ongoing
           </span>
           <span className="legend-item">
             <span className="legend-color ongoing"></span>
-            Ongoing
+            Open
           </span>
         </div>
       </section>
